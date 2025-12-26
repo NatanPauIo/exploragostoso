@@ -130,20 +130,9 @@ public class Pacotes extends Controller {
 		
 	}
 	
-public static void excluir(Long id) {
-		
-	PacoteTuristico pacote = PacoteTuristico.findById(id);
 
-    if (pacote != null) {
-        pacote.status = Status.INATIVO;
-        pacote.save();
-        flash.success("Pacote '%s' foi removido com sucesso.", pacote.nome);
-    } else {
-        flash.error("Pacote não encontrado.");
-    }
-    	listaadm(null);
-		
-	}
+
+
 @Administrador	
 public static void listaadm(String termo) {
 	List<PacoteTuristico> pacotes = null;
@@ -178,6 +167,19 @@ public static void ativar(Long id) {
     
     
     listaadm(null);
+}
+
+public static void alterarStatus(Long id, boolean ativo) {
+    PacoteTuristico pacote = PacoteTuristico.findById(id);
+    
+    if (pacote != null) {
+        
+        pacote.status = ativo ? Status.ATIVO : Status.INATIVO;
+        pacote.save();
+        renderText("sucesso"); 
+    } else {
+        error("Pacote não encontrado");
+    }
 }
 
 }

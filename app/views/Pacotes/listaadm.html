@@ -43,22 +43,22 @@
 						<td><strong>${pacote.nome}</strong></td>
 						<td>${pacote.duracao} horas</td>
 						<td>R$ ${pacote.preco.format('#,##0.00')}</td>
-						<td><span
-							class="status-badge 
-                                #{if pacote.status.name() == 'ATIVO'}status-ativo#{/if}
-                                #{if pacote.status.name() == 'INATIVO'}status-inativo#{/if}">
+
+						<td><span id="status-text-${pacote.id}"
+							class="status-badge #{if pacote.status.name() == 'ATIVO'}status-ativo#{/if}#{else}status-inativo#{/else}">
 								${pacote.status.name()} </span></td>
-						<td class="actions-cell" style="justify-content: flex-end;">
-							<a href="@{Pacotes.detalhar(pacote.id)}" class="btn-info">Detalhes</a>
-							<a href="@{Pacotes.editar(pacote.id)}" class="btn-warning">Editar</a>
-							#{if pacote.status.name() == 'ATIVO'} <a
-							href="@{Pacotes.excluir(pacote.id)}" class="btn-danger"
-							onclick="return confirm('Tem certeza que deseja inativar o pacote \'${pacote.nome}\'?');">Inativar</a>
-							#{/if} #{elseif pacote.status.name() == 'INATIVO'} <a
-							href="@{Pacotes.ativar(pacote.id)}" class="btn-success"
-							onclick="return confirm('Tem certeza que deseja reativar o pacote \'${pacote.nome}\'?');">Ativar</a>
-							#{/elseif}
-						</td>
+
+						<td class="actions-cell"
+							style="justify-content: flex-end; align-items: center;"><a
+							href="@{Pacotes.detalhar(pacote.id)}" class="btn-info"
+							style="margin-right: 5px;">Detalhes</a> <a
+							href="@{Pacotes.editar(pacote.id)}" class="btn-warning"
+							style="margin-right: 15px;">Editar</a> <label class="switch"
+							title="Ativar/Inativar Pacote"> <input type="checkbox"
+								onchange="alternarStatus(${pacote.id}, this)" #{if
+								pacote.status.name()=='ATIVO'}checked#{/if}> <span
+								class="slider round"></span>
+						</label></td>
 					</tr>
 					#{/list} #{else}
 					<tr>
@@ -94,3 +94,46 @@
             </symbol>
         </defs>
     </svg>
+    <script>
+   function alternarStatus(id, checkbox) {
+    
+    var ativo = checkbox.checked;
+    
+    
+    checkbox.parentElement.classList.add('loading');
+    
+    
+    var url = "@{Pacotes.alterarStatus()}"; 
+    
+    
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {
+            'id': id,
+            'ativo': ativo
+        },
+        success: function(response) {
+            
+            checkbox.parentElement.classList.remove('loading');
+            
+            
+            var badge = document.getElementById('status-text-' + id);
+            if(ativo) {
+                badge.textContent = 'ATIVO';
+                badge.className = 'status-badge status-ativo';
+            } else {
+                badge.textContent = 'INATIVO';
+                badge.className = 'status-badge status-inativo';
+            }
+            console.log("Status alterado com sucesso.");
+        },
+        error: function() {
+            alert('Erro ao alterar status. Tente novamente.');
+            
+            checkbox.checked = !ativo;
+            checkbox.parentElement.classList.remove('loading');
+        }
+    });
+}
+</script>
