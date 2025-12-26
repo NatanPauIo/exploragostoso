@@ -42,6 +42,8 @@ O projeto foi desenvolvido utilizando a arquitetura **MVC**.
 - **Versionamento:** Git, GitHub
 - **Ferramentas:** Eclipse IDE, Google Chrome e Edge
 
+- **Download da versão do Play Framework utilizada:** https://drive.google.com/drive/folders/1SMgFU71L-9EcPOzQXfFkkVAFWXTHa_lD?usp=sharing
+
 ## Logins para teste do sistema 
 
 - **Cliente:**
